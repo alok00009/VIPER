@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIPER AI | Premium Predictor</title>
+    <title>VIPER AI | Unlimited Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #020617; color: white; font-family: 'Poppins', sans-serif; }
         .glass-card { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
         .safe-tile { background: #0891b2 !important; border: 2px solid #22d3ee !important; box-shadow: 0 0 15px #22d3ee; }
-        .lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 24px; }
         input { background: #0f172a !important; border: 1px solid #1e293b !important; color: white; outline: none; }
         .hidden { display: none; }
         .modal-bg { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
@@ -41,55 +40,51 @@
     
     <nav class="flex justify-between items-center mb-6 py-2 border-b border-slate-800">
         <h1 class="text-cyan-400 font-black text-xl tracking-tighter uppercase">Viper AI</h1>
-        <button onclick="togglePremium()" class="text-gray-400 text-2xl px-2 font-bold">⋮</button>
+        <button onclick="toggleMenu()" class="text-gray-400 text-2xl px-2 font-bold">⋮</button>
     </nav>
 
-    <div id="premiumModal" class="hidden fixed inset-0 z-[100] modal-bg flex items-center justify-center p-6">
+    <div id="menuModal" class="hidden fixed inset-0 z-[100] modal-bg flex items-center justify-center p-6">
         <div class="glass-card p-6 w-full max-w-xs text-center border-cyan-500/40">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-cyan-400 font-bold uppercase text-sm">Buy Plans</h3>
-                <button onclick="togglePremium()" class="text-gray-500 text-xl">✕</button>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-cyan-400 font-bold uppercase text-sm">Account Info</h3>
+                <button onclick="toggleMenu()" class="text-gray-500 text-xl">✕</button>
             </div>
-            <div class="bg-white p-2 rounded-xl inline-block mb-4">
-                <img src="1000128238.jpg" alt="UPI QR" class="w-44 h-44 object-contain">
+            
+            <div class="bg-slate-900 p-4 rounded-2xl mb-6 border border-slate-800">
+                <p class="text-gray-500 text-[10px] uppercase mb-1">Status</p>
+                <p class="text-emerald-400 font-bold text-lg">UNLIMITED ACCESS</p>
             </div>
-            <div class="space-y-2 text-left text-[11px] mb-4">
-                <div class="flex justify-between border-b border-slate-800 pb-1"><span>🥈 Silver (3/Day)</span><span class="text-white">₹49</span></div>
-                <div class="flex justify-between border-b border-slate-800 pb-1"><span>🥇 Gold (50/Day)</span><span class="text-yellow-500">₹99</span></div>
-                <div class="flex justify-between border-b border-slate-800 pb-1"><span>💎 Diamond (Unlimited)</span><span class="text-cyan-400">₹199</span></div>
-            </div>
-            <p class="text-[9px] text-gray-500 mb-4">Send screenshot to admin after payment.</p>
-            <button onclick="logout()" class="w-full bg-red-600/10 text-red-500 py-2 rounded-lg text-[10px] font-bold border border-red-500/20 uppercase">Logout</button>
+
+            <button onclick="logout()" class="w-full bg-red-600/10 text-red-500 py-3 rounded-xl text-xs font-bold border border-red-500/20 uppercase">Logout Account</button>
         </div>
     </div>
 
     <div class="glass-card p-6 mb-6">
         <div class="flex justify-between items-center mb-4">
-            <span id="planLabel" class="text-[10px] bg-cyan-600 px-3 py-1 rounded-full text-white font-bold tracking-widest uppercase">Silver</span>
-            <span id="limitLabel" class="text-[10px] text-gray-400 font-bold">Limit: 3/3</span>
+            <span class="text-[10px] bg-cyan-600/20 px-3 py-1 rounded-full text-cyan-400 font-bold tracking-widest uppercase">Wingo Pro</span>
+            <span class="text-[10px] text-emerald-400 font-bold">● System Active</span>
         </div>
         <input type="number" id="pastNo" placeholder="Last Number" class="w-full p-4 rounded-2xl text-center text-3xl font-black mb-4">
+        
         <div class="text-center py-4 border-y border-slate-800/50 my-4">
             <div id="wRes" class="text-5xl font-black my-2">---</div>
-            <div id="goldBox" class="hidden mt-4 pt-4 border-t border-slate-800">
+            
+            <div id="goldBox" class="mt-4 pt-4 border-t border-slate-800">
+                <p class="text-yellow-500 text-[10px] font-bold mb-3 uppercase">Top 3 Numbers</p>
                 <div class="flex justify-center gap-4">
-                    <div id="n1" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
-                    <div id="n2" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
-                    <div id="n3" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
+                    <div id="n1" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
+                    <div id="n2" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
+                    <div id="n3" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
                 </div>
             </div>
         </div>
-        <button id="runBtn" onclick="runWingo()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all">Get Prediction</button>
+        <button onclick="runWingo()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all">Get Prediction</button>
     </div>
 
-    <div class="glass-card p-6 relative overflow-hidden h-[340px]">
-        <div id="mLock" class="lock-screen hidden">
-            <span class="text-3xl mb-2">💎</span>
-            <p class="text-xs font-bold uppercase">Diamond Required</p>
-        </div>
+    <div class="glass-card p-6 h-[340px]">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xs font-bold text-emerald-400 uppercase">Mines Grid</h3>
-            <button onclick="runMines()" class="bg-emerald-600 px-4 py-1 rounded text-[10px] font-bold">SCAN</button>
+            <h3 class="text-xs font-bold text-emerald-400 uppercase">Mines Grid Scanner</h3>
+            <button onclick="runMines()" class="bg-emerald-600 px-4 py-1 rounded text-[10px] font-bold shadow-lg shadow-emerald-900/20">SCAN</button>
         </div>
         <div id="mGrid" class="grid grid-cols-5 gap-2 h-[220px]"></div>
     </div>
@@ -98,7 +93,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyD6f_ghtCQP2q41QXGkld1l8KhX6z7mYgU",
@@ -123,76 +118,47 @@
         const e = document.getElementById('rEmail').value, p = document.getElementById('rPass').value;
         try {
             const cred = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/' + cred.user.uid), { plan: 'silver', usage: 0, email: e });
+            await set(ref(db, 'users/' + cred.user.uid), { email: e, access: 'unlimited' });
             location.reload();
         } catch (err) { alert(err.message); }
     });
 
     document.getElementById('btnLogin').addEventListener('click', async () => {
         const e = document.getElementById('lEmail').value, p = document.getElementById('lPass').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("Wrong Login!"); }
+        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("Login Failed!"); }
     });
 
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
         if (user) {
-            const snap = await get(ref(db, 'users/' + user.uid));
-            const data = snap.val();
-            window.userData = data;
-            window.userId = user.uid;
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
-            initApp(data.plan, data.usage);
+        } else {
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
         }
     });
 
     window.logout = () => { auth.signOut(); location.reload(); };
-
-    // Update Usage to DB
-    window.updateUsage = async (newUsage) => {
-        await update(ref(db, 'users/' + window.userId), { usage: newUsage });
-    }
 </script>
 
 <script>
-    function togglePremium() { document.getElementById('premiumModal').classList.toggle('hidden'); }
+    function toggleMenu() { document.getElementById('menuModal').classList.toggle('hidden'); }
 
-    function initApp(p, u) {
-        document.getElementById('planLabel').innerText = p.toUpperCase();
-        let limit = p === 'silver' ? 3 : (p === 'gold' ? 50 : "∞");
-        document.getElementById('limitLabel').innerText = `Used: ${u}/${limit}`;
-        
-        if(p !== 'silver') document.getElementById('goldBox').classList.remove('hidden');
-        if(p === 'diamond') document.getElementById('mLock').classList.add('hidden');
-        else document.getElementById('mLock').classList.remove('hidden');
-    }
-
-    async function runWingo() {
-        const p = window.userData.plan;
-        const u = window.userData.usage;
-        const max = p === 'silver' ? 3 : (p === 'gold' ? 50 : 999999);
-
-        if(u >= max) return alert("Daily Limit Reached! Upgrade Plan.");
-
+    function runWingo() {
         const n = parseInt(document.getElementById('pastNo').value);
-        if(isNaN(n)) return alert("Enter No!");
+        if(isNaN(n)) return alert("Enter Last Number!");
         
-        document.getElementById('wRes').innerText = "CALCULATING";
+        const res = document.getElementById('wRes');
+        res.innerText = "WAIT...";
         
-        setTimeout(async () => {
-            const size = (n + 3) % 10 >= 5 ? "BIG" : "SMALL";
-            document.getElementById('wRes').innerText = size;
-            document.getElementById('wRes').style.color = size === "BIG" ? "#f87171" : "#60a5fa";
+        setTimeout(() => {
+            const size = (n + 4) % 10 >= 5 ? "BIG" : "SMALL";
+            res.innerText = size;
+            res.style.color = size === "BIG" ? "#f87171" : "#60a5fa";
             
-            if(p !== 'silver') {
-                document.getElementById('n1').innerText = (n+2)%10;
-                document.getElementById('n2').innerText = (n+5)%10;
-                document.getElementById('n3').innerText = (n+8)%10;
-            }
-
-            // Increase usage
-            window.userData.usage++;
-            initApp(p, window.userData.usage);
-            await window.updateUsage(window.userData.usage);
+            document.getElementById('n1').innerText = (n+1)%10;
+            document.getElementById('n2').innerText = (n+4)%10;
+            document.getElementById('n3').innerText = (n+7)%10;
         }, 800);
     }
 
@@ -211,5 +177,4 @@
     }
 </script>
 </body>
-  </html>
-  
+</html>
