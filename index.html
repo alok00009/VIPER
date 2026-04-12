@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,7 @@
         input { background: #0f172a !important; border: 1px solid #1e293b !important; color: white; outline: none; }
         .hidden { display: none; }
         .modal-bg { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
+        .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
     </style>
 </head>
 <body oncontextmenu="return false">
@@ -37,7 +39,6 @@
 </div>
 
 <div id="dashboardPage" class="hidden container mx-auto p-4 max-w-lg min-h-screen relative">
-    
     <nav class="flex justify-between items-center mb-6 py-2 border-b border-slate-800">
         <h1 class="text-cyan-400 font-black text-xl tracking-tighter uppercase">Viper AI</h1>
         <button onclick="toggleMenu()" class="text-gray-400 text-2xl px-2 font-bold">⋮</button>
@@ -52,7 +53,8 @@
             
             <div class="bg-slate-900 p-4 rounded-2xl mb-6 border border-slate-800">
                 <p class="text-gray-500 text-[10px] uppercase mb-1">Status</p>
-                <p class="text-emerald-400 font-bold text-lg">UNLIMITED ACCESS</p>
+                <p id="statusDisplay" class="text-orange-400 font-bold text-lg">CHECKING...</p>
+                <p id="expiryDisplay" class="text-gray-400 text-[9px] mt-1"></p>
             </div>
 
             <button onclick="logout()" class="w-full bg-red-600/10 text-red-500 py-3 rounded-xl text-xs font-bold border border-red-500/20 uppercase">Logout Account</button>
@@ -62,15 +64,13 @@
     <div class="glass-card p-6 mb-6">
         <div class="flex justify-between items-center mb-4">
             <span class="text-[10px] bg-cyan-600/20 px-3 py-1 rounded-full text-cyan-400 font-bold tracking-widest uppercase">Wingo Pro</span>
-            <span class="text-[10px] text-emerald-400 font-bold">● System Active</span>
+            <span id="systemIndicator" class="text-[10px] text-gray-400 font-bold">● System Inactive</span>
         </div>
         <input type="number" id="pastNo" placeholder="Last Number" class="w-full p-4 rounded-2xl text-center text-3xl font-black mb-4">
         
         <div class="text-center py-4 border-y border-slate-800/50 my-4">
             <div id="wRes" class="text-5xl font-black my-2">---</div>
-            
             <div id="goldBox" class="mt-4 pt-4 border-t border-slate-800">
-                <p class="text-yellow-500 text-[10px] font-bold mb-3 uppercase">Top 3 Numbers</p>
                 <div class="flex justify-center gap-4">
                     <div id="n1" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
                     <div id="n2" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
@@ -78,13 +78,13 @@
                 </div>
             </div>
         </div>
-        <button onclick="runWingo()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all">Get Prediction</button>
+        <button id="predictBtn" onclick="runWingo()" class="disabled-btn w-full bg-cyan-600 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg">Get Prediction</button>
     </div>
 
     <div class="glass-card p-6 h-[340px]">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xs font-bold text-emerald-400 uppercase">Mines Grid Scanner</h3>
-            <button onclick="runMines()" class="bg-emerald-600 px-4 py-1 rounded text-[10px] font-bold shadow-lg shadow-emerald-900/20">SCAN</button>
+            <button id="scanBtn" onclick="runMines()" class="disabled-btn bg-emerald-600 px-4 py-1 rounded text-[10px] font-bold">SCAN</button>
         </div>
         <div id="mGrid" class="grid grid-cols-5 gap-2 h-[220px]"></div>
     </div>
@@ -92,8 +92,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyD6f_ghtCQP2q41QXGkld1l8KhX6z7mYgU",
@@ -118,7 +118,12 @@
         const e = document.getElementById('rEmail').value, p = document.getElementById('rPass').value;
         try {
             const cred = await createUserWithEmailAndPassword(auth, e, p);
-            await set(ref(db, 'users/' + cred.user.uid), { email: e, access: 'unlimited' });
+            // Default: New users are "pending" and have 0 expiry
+            await set(ref(db, 'users/' + cred.user.uid), { 
+                email: e, 
+                access: 'pending', 
+                expiry: 0 
+            });
             location.reload();
         } catch (err) { alert(err.message); }
     });
@@ -132,6 +137,41 @@
         if (user) {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
+            
+            // Listen for Admin Approval and Expiry
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                const now = Date.now();
+                const statusEl = document.getElementById('statusDisplay');
+                const expiryEl = document.getElementById('expiryDisplay');
+                const pBtn = document.getElementById('predictBtn');
+                const sBtn = document.getElementById('scanBtn');
+                const indicator = document.getElementById('systemIndicator');
+
+                if (data && data.access === 'active' && data.expiry > now) {
+                    statusEl.innerText = "ACTIVE ACCESS";
+                    statusEl.className = "text-emerald-400 font-bold text-lg";
+                    expiryEl.innerText = "Expires: " + new Date(data.expiry).toLocaleString();
+                    
+                    // Enable Buttons
+                    pBtn.classList.remove('disabled-btn');
+                    sBtn.classList.remove('disabled-btn');
+                    indicator.innerText = "● System Active";
+                    indicator.className = "text-[10px] text-emerald-400 font-bold";
+                } else {
+                    statusEl.innerText = data?.access === 'pending' ? "PENDING APPROVAL" : "ACCESS EXPIRED";
+                    statusEl.className = "text-red-400 font-bold text-lg";
+                    expiryEl.innerText = "Contact Admin for Access";
+                    
+                    // Disable Buttons
+                    pBtn.classList.add('disabled-btn');
+                    sBtn.classList.add('disabled-btn');
+                    indicator.innerText = "● System Locked";
+                    indicator.className = "text-[10px] text-red-500 font-bold";
+                }
+            });
+
         } else {
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('dashboardPage').classList.add('hidden');
@@ -147,15 +187,12 @@
     function runWingo() {
         const n = parseInt(document.getElementById('pastNo').value);
         if(isNaN(n)) return alert("Enter Last Number!");
-        
         const res = document.getElementById('wRes');
         res.innerText = "WAIT...";
-        
         setTimeout(() => {
             const size = (n + 4) % 10 >= 5 ? "BIG" : "SMALL";
             res.innerText = size;
             res.style.color = size === "BIG" ? "#f87171" : "#60a5fa";
-            
             document.getElementById('n1').innerText = (n+1)%10;
             document.getElementById('n2').innerText = (n+4)%10;
             document.getElementById('n3').innerText = (n+7)%10;
