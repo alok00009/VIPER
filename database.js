@@ -22,7 +22,7 @@ if (authBtn) {
             localStorage.setItem('active_key', key);
             location.reload();
         } else {
-            alert("WRONG KEY! 💀");
+            alert("WRONG KEY 💀");
         }
     };
 }
