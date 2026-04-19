@@ -3,214 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIPER AI | Unlimited Edition</title>
+    <title>Nobita Hack 💀 | V15 Auto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #020617; color: white; font-family: 'Poppins', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
-        .safe-tile { background: #0891b2 !important; border: 2px solid #22d3ee !important; box-shadow: 0 0 15px #22d3ee; }
-        input { background: #0f172a !important; border: 1px solid #1e293b !important; color: white; outline: none; }
-        .hidden { display: none; }
-        .modal-bg { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
-        .disabled-btn { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@900&display=swap');
+        :root { --neon-yellow: #fffb13; --neon-red: #ff3c73; --bg: #05070a; }
+        body { background: var(--bg); color: white; font-family: sans-serif; user-select: none; }
+        .shell { background: rgba(15, 17, 26, 0.98); border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); }
+        .nobita-title { font-family: 'Syncopate', sans-serif; text-shadow: 0 0 15px var(--neon-red); color: var(--neon-red); }
+        .hacker-font { font-family: 'Orbitron', sans-serif; }
+        .hidden { display: none !important; }
+        .history-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; transition: 0.3s; }
+        .copy-toast { position: fixed; bottom: 20px; background: #10b981; color: white; padding: 10px 20px; border-radius: 50px; font-size: 10px; font-weight: bold; transform: translateY(100px); transition: 0.5s; z-index: 200; }
+        .copy-toast.show { transform: translateY(0); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-red); border-radius: 10px; }
     </style>
 </head>
-<body oncontextmenu="return false">
+<body class="min-h-screen flex flex-col items-center p-4">
 
-<div id="authSection" class="min-h-screen flex items-center justify-center p-4">
-    <div class="glass-card p-8 w-full max-w-md shadow-2xl">
-        <div class="flex justify-center gap-6 mb-8 border-b border-slate-800 pb-4">
-            <button onclick="toggleAuth('login')" id="loginTab" class="font-bold text-cyan-400">LOGIN</button>
-            <button onclick="toggleAuth('reg')" id="regTab" class="font-bold text-gray-500">REGISTER</button>
-        </div>
-        <div id="loginForm" class="space-y-4">
-            <input type="email" id="lEmail" placeholder="Email" class="w-full p-4 rounded-2xl">
-            <input type="password" id="lPass" placeholder="Password" class="w-full p-4 rounded-2xl">
-            <button id="btnLogin" class="w-full bg-cyan-600 py-4 rounded-2xl font-bold uppercase shadow-lg">Login Now</button>
-        </div>
-        <div id="regForm" class="hidden space-y-4">
-            <input type="email" id="rEmail" placeholder="New Email" class="w-full p-4 rounded-2xl">
-            <input type="password" id="rPass" placeholder="Set Password (6+)" class="w-full p-4 rounded-2xl">
-            <button id="btnReg" class="w-full bg-emerald-600 py-4 rounded-2xl font-bold uppercase shadow-lg">Create Account</button>
-        </div>
-        <p id="msg" class="text-center text-xs font-bold mt-4 h-4 text-cyan-400"></p>
-    </div>
-</div>
+    <div id="copyToast" class="copy-toast">HACK DETAILS COPIED 💀</div>
 
-<div id="dashboardPage" class="hidden container mx-auto p-4 max-w-lg min-h-screen relative">
-    <nav class="flex justify-between items-center mb-6 py-2 border-b border-slate-800">
-        <h1 class="text-cyan-400 font-black text-xl tracking-tighter uppercase">Viper AI</h1>
-        <button onclick="toggleMenu()" class="text-gray-400 text-2xl px-2 font-bold">⋮</button>
-    </nav>
-
-    <div id="menuModal" class="hidden fixed inset-0 z-[100] modal-bg flex items-center justify-center p-6">
-        <div class="glass-card p-6 w-full max-w-xs text-center border-cyan-500/40">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-cyan-400 font-bold uppercase text-sm">Account Info</h3>
-                <button onclick="toggleMenu()" class="text-gray-500 text-xl">✕</button>
-            </div>
-            
-            <div class="bg-slate-900 p-4 rounded-2xl mb-6 border border-slate-800">
-                <p class="text-gray-500 text-[10px] uppercase mb-1">Status</p>
-                <p id="statusDisplay" class="text-orange-400 font-bold text-lg">CHECKING...</p>
-                <p id="expiryDisplay" class="text-gray-400 text-[9px] mt-1"></p>
-            </div>
-
-            <button onclick="logout()" class="w-full bg-red-600/10 text-red-500 py-3 rounded-xl text-xs font-bold border border-red-500/20 uppercase">Logout Account</button>
-        </div>
+    <div id="keyOverlay" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center p-6 text-center">
+        <h1 class="nobita-title text-2xl mb-8 italic">Nobita Auth 💀</h1>
+        <input type="text" id="accessKey" placeholder="ENTER ACCESS KEY" class="w-full max-w-xs bg-gray-900 border border-red-500/30 p-5 rounded-2xl text-center outline-none mb-4 font-bold text-red-500 uppercase">
+        <button id="authBtn" class="bg-red-600 w-full max-w-xs py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">Unlock Hack</button>
     </div>
 
-    <div class="glass-card p-6 mb-6">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-[10px] bg-cyan-600/20 px-3 py-1 rounded-full text-cyan-400 font-bold tracking-widest uppercase">Wingo Pro</span>
-            <span id="systemIndicator" class="text-[10px] text-gray-400 font-bold">● System Inactive</span>
-        </div>
-        <input type="number" id="pastNo" placeholder="Last Number" class="w-full p-4 rounded-2xl text-center text-3xl font-black mb-4">
-        
-        <div class="text-center py-4 border-y border-slate-800/50 my-4">
-            <div id="wRes" class="text-5xl font-black my-2">---</div>
-            <div id="goldBox" class="mt-4 pt-4 border-t border-slate-800">
-                <div class="flex justify-center gap-4">
-                    <div id="n1" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
-                    <div id="n2" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
-                    <div id="n3" class="w-11 h-11 bg-slate-800 rounded-full flex items-center justify-center font-bold border border-slate-700">-</div>
+    <div id="mainApp" class="hidden w-full max-w-sm">
+        <div class="shell p-8 text-center relative shadow-2xl mb-6">
+            <h1 class="nobita-title text-3xl font-black mb-1 italic">Nobita Hack</h1>
+            <p class="text-[#fffb13] text-[9px] uppercase tracking-[0.4em] mb-10 italic">Strict Logic V15</p>
+
+            <div class="bg-black/50 rounded-[40px] py-12 border border-white/5 mb-8 relative">
+                <div id="aiLoader" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center rounded-[40px] z-20">
+                    <div class="w-10 h-10 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                 </div>
+                <p id="nextPeriod" class="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest italic">Syncing API...</p>
+                <div id="wRes" class="hacker-font text-8xl">---</div>
+                <div id="opNums" class="text-[#fffb13] font-black text-xl mt-4">-</div>
+            </div>
+
+            <div class="w-full py-4 rounded-3xl border border-red-600/20 text-[10px] uppercase font-black tracking-widest text-red-600">
+                <span class="animate-pulse">● Auto Injecting Prediction</span>
             </div>
         </div>
-        <button id="predictBtn" onclick="runWingo()" class="disabled-btn w-full bg-cyan-600 py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg">Get Prediction</button>
-    </div>
 
-    <div class="glass-card p-6 h-[340px]">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xs font-bold text-emerald-400 uppercase">Mines Grid Scanner</h3>
-            <button id="scanBtn" onclick="runMines()" class="disabled-btn bg-emerald-600 px-4 py-1 rounded text-[10px] font-bold">SCAN</button>
+        <div class="shell p-6 bg-black/40">
+            <h2 class="hacker-font text-[10px] text-white/50 uppercase italic mb-4">Cloud Verified History 💀</h2>
+            <div id="historyList" class="space-y-3 max-h-[400px] overflow-y-auto pr-1"></div>
         </div>
-        <div id="mGrid" class="grid grid-cols-5 gap-2 h-[220px]"></div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyD6f_ghtCQP2q41QXGkld1l8KhX6z7mYgU",
-        authDomain: "fuck-u-1fd9c.firebaseapp.com",
-        databaseURL: "https://fuck-u-1fd9c-default-rtdb.firebaseio.com",
-        projectId: "fuck-u-1fd9c",
-        storageBucket: "fuck-u-1fd9c.firebasestorage.app",
-        messagingSenderId: "418045703508",
-        appId: "1:418045703508:web:736581cc3132dab22fc4c1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    window.toggleAuth = (m) => {
-        document.getElementById('loginForm').classList.toggle('hidden', m !== 'login');
-        document.getElementById('regForm').classList.toggle('hidden', m !== 'reg');
-    };
-
-    document.getElementById('btnReg').addEventListener('click', async () => {
-        const e = document.getElementById('rEmail').value, p = document.getElementById('rPass').value;
-        try {
-            const cred = await createUserWithEmailAndPassword(auth, e, p);
-            // Default: New users are "pending" and have 0 expiry
-            await set(ref(db, 'users/' + cred.user.uid), { 
-                email: e, 
-                access: 'pending', 
-                expiry: 0 
-            });
-            location.reload();
-        } catch (err) { alert(err.message); }
-    });
-
-    document.getElementById('btnLogin').addEventListener('click', async () => {
-        const e = document.getElementById('lEmail').value, p = document.getElementById('lPass').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } catch (err) { alert("Login Failed!"); }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            
-            // Listen for Admin Approval and Expiry
-            const userRef = ref(db, 'users/' + user.uid);
-            onValue(userRef, (snapshot) => {
-                const data = snapshot.val();
-                const now = Date.now();
-                const statusEl = document.getElementById('statusDisplay');
-                const expiryEl = document.getElementById('expiryDisplay');
-                const pBtn = document.getElementById('predictBtn');
-                const sBtn = document.getElementById('scanBtn');
-                const indicator = document.getElementById('systemIndicator');
-
-                if (data && data.access === 'active' && data.expiry > now) {
-                    statusEl.innerText = "ACTIVE ACCESS";
-                    statusEl.className = "text-emerald-400 font-bold text-lg";
-                    expiryEl.innerText = "Expires: " + new Date(data.expiry).toLocaleString();
-                    
-                    // Enable Buttons
-                    pBtn.classList.remove('disabled-btn');
-                    sBtn.classList.remove('disabled-btn');
-                    indicator.innerText = "● System Active";
-                    indicator.className = "text-[10px] text-emerald-400 font-bold";
-                } else {
-                    statusEl.innerText = data?.access === 'pending' ? "PENDING APPROVAL" : "ACCESS EXPIRED";
-                    statusEl.className = "text-red-400 font-bold text-lg";
-                    expiryEl.innerText = "Contact Admin for Access";
-                    
-                    // Disable Buttons
-                    pBtn.classList.add('disabled-btn');
-                    sBtn.classList.add('disabled-btn');
-                    indicator.innerText = "● System Locked";
-                    indicator.className = "text-[10px] text-red-500 font-bold";
-                }
-            });
-
-        } else {
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-        }
-    });
-
-    window.logout = () => { auth.signOut(); location.reload(); };
-</script>
-
-<script>
-    function toggleMenu() { document.getElementById('menuModal').classList.toggle('hidden'); }
-
-    function runWingo() {
-        const n = parseInt(document.getElementById('pastNo').value);
-        if(isNaN(n)) return alert("Enter Last Number!");
-        const res = document.getElementById('wRes');
-        res.innerText = "WAIT...";
-        setTimeout(() => {
-            const size = (n + 4) % 10 >= 5 ? "BIG" : "SMALL";
-            res.innerText = size;
-            res.style.color = size === "BIG" ? "#f87171" : "#60a5fa";
-            document.getElementById('n1').innerText = (n+1)%10;
-            document.getElementById('n2').innerText = (n+4)%10;
-            document.getElementById('n3').innerText = (n+7)%10;
-        }, 800);
-    }
-
-    function runMines() {
-        const tiles = document.querySelectorAll('.m-tile');
-        tiles.forEach(t => { t.classList.remove('safe-tile'); t.innerHTML = ""; });
-        let sel = []; while(sel.length < 5) { let r = Math.floor(Math.random()*25); if(!sel.includes(r)) sel.push(r); }
-        sel.forEach((idx, i) => { setTimeout(() => { tiles[idx].classList.add('safe-tile'); tiles[idx].innerHTML = "⭐"; }, i*150); });
-    }
-
-    const grid = document.getElementById('mGrid');
-    for(let i=0; i<25; i++) {
-        const d = document.createElement('div');
-        d.className = "m-tile h-full bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-xl transition-all";
-        grid.appendChild(d);
-    }
-</script>
+    <script type="module" src="database.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
