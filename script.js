@@ -5,7 +5,7 @@ let lastInjectedPeriod = null;
 const userKey = localStorage.getItem('active_key');
 
 window.copyHack = (period, pred, nums) => {
-    const text = `🚀 NOBITA HACK V15 💀\n━━━━━━━━━━━━━━━\nPERIOD: ${period}\nPREDICTION: ${pred}\nNUMBERS: ${nums}\n━━━━━━━━━━━━━━━`;
+    const text = `🚀 NOBITA HACK V15 💀\n━━━━━━━━━━━━━━━\nPERIOD: ${period}\nPREDICTION: ${pred}\nJACKPOT: ${nums}\n━━━━━━━━━━━━━━━`;
     navigator.clipboard.writeText(text).then(() => {
         const toast = document.getElementById('copyToast');
         toast.classList.add('show');
@@ -31,13 +31,20 @@ async function autoInject(num, period) {
         const n = parseInt(num);
         let size, opNums;
 
-        // MATH LOGIC V15: Even -> BIG | Odd -> SMALL
+        // V15 MATH: EVEN -> BIG | ODD -> SMALL
         if (n % 2 === 0) {
             size = "BIG";
-            opNums = "5, 6, 8"; // Custom set for Big
+            // MATHEMATICS: Selecting 2 Perfect Numbers for Big
+            // Using a dynamic offset for more accuracy
+            let n1 = (n + 6) % 10; if(n1 < 5) n1 += 5;
+            let n2 = (n + 8) % 10; if(n2 < 5) n2 += 5;
+            opNums = `${n1}, ${n2}`;
         } else {
             size = "SMALL";
-            opNums = "1, 2, 3"; // Custom set for Small
+            // MATHEMATICS: Selecting 2 Perfect Numbers for Small
+            let n1 = Math.abs(n - 2) % 5;
+            let n2 = Math.abs(n - 4) % 5;
+            opNums = `${n1}, ${n2}`;
         }
 
         const historyRef = push(ref(db, `user_history/${userKey}`));
@@ -54,7 +61,7 @@ async function autoInject(num, period) {
         document.getElementById('aiLoader').classList.add('hidden');
         
         lastInjectedPeriod = nextIssue;
-    }, 1000);
+    }, 1200);
 }
 
 function loadHistory() {
@@ -62,7 +69,7 @@ function loadHistory() {
     onValue(ref(db, `user_history/${userKey}`), async (snapshot) => {
         const realData = await getRealResults();
         if (!snapshot.exists()) {
-            listDiv.innerHTML = "<p class='text-center py-10 text-gray-800 text-[10px]'>NO RECORDS</p>";
+            listDiv.innerHTML = "<p class='text-center py-10 text-gray-800 text-[9px] font-black uppercase'>Searching Cloud Records...</p>";
             return;
         }
 
@@ -76,33 +83,26 @@ function loadHistory() {
                 const rSize = rNum >= 5 ? "BIG" : "SMALL";
                 resDetail = `${rSize} (${rNum})`;
                 
-                // --- SMART STATUS LOGIC ---
-                const jackpotNums = item.opNums.split(",").map(x => parseInt(x.trim()));
+                // Perfect JK Logic for 2 Numbers
+                const jackpotArray = item.opNums.split(",").map(x => parseInt(x.trim()));
                 
                 if (item.prediction === rSize) {
-                    status = `WIN (${rSize})`; 
-                    sCol = "text-emerald-500"; 
-                    border = "border-emerald-500/20";
-                } else if (jackpotNums.includes(rNum)) {
-                    // Size mismatch but Jackpot Number hit!
-                    status = `JK (JACKPOT ${rNum})`; 
-                    sCol = "text-yellow-400"; 
-                    border = "border-yellow-400/20";
+                    status = `WIN (${rSize})`; sCol = "text-emerald-500"; border = "border-emerald-500/20";
+                } else if (jackpotArray.includes(rNum)) {
+                    status = `JK (JACKPOT ${rNum})`; sCol = "text-yellow-400"; border = "border-yellow-400/20";
                 } else {
-                    status = `LOSS (${rSize} ${rNum})`; 
-                    sCol = "text-red-500"; 
-                    border = "border-red-500/20";
+                    status = `LOSS (${rSize} ${rNum})`; sCol = "text-red-500"; border = "border-red-500/20";
                 }
             }
 
             listDiv.innerHTML += `
-                <div class="history-card p-4 border ${border} mb-3">
+                <div class="history-card p-4 border ${border} mb-3 transition-all duration-500">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">PRD: ...${item.period.toString().slice(-4)}</p>
+                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">Period: ...${item.period.toString().slice(-4)}</p>
                             <div class="flex gap-2 mt-1">
-                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white/40 uppercase">PRED: ${item.prediction}</span>
-                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white uppercase font-bold tracking-tighter">REAL: ${resDetail}</span>
+                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white/40 uppercase">PRD: ${item.prediction}</span>
+                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white uppercase font-bold tracking-tighter">RL: ${resDetail}</span>
                             </div>
                         </div>
                         <button onclick="copyHack('${item.period}', '${item.prediction}', '${item.opNums}')" class="bg-white/5 p-2 rounded-lg border border-white/10 active:scale-90 transition-all">
@@ -111,7 +111,7 @@ function loadHistory() {
                     </div>
                     <div class="mt-3 flex justify-between items-end">
                         <p class="hacker-font text-[9px] ${sCol} italic font-black uppercase tracking-tighter">${status}</p>
-                        <p class="text-[6px] text-white/10 font-bold">${item.time}</p>
+                        <p class="text-[6px] text-white/10 font-bold uppercase">${item.time}</p>
                     </div>
                 </div>
             `;
