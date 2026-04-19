@@ -14,9 +14,6 @@ const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 
 const authBtn = document.getElementById('authBtn');
-const keyOverlay = document.getElementById('keyOverlay');
-const mainApp = document.getElementById('mainApp');
-
 if (authBtn) {
     authBtn.onclick = async () => {
         const key = document.getElementById('accessKey').value.trim().toUpperCase();
@@ -30,15 +27,7 @@ if (authBtn) {
     };
 }
 
-const savedKey = localStorage.getItem('active_key');
-if (savedKey) {
-    onValue(ref(db, 'access_keys/' + savedKey), (snap) => {
-        if (snap.exists()) {
-            keyOverlay.classList.add('hidden');
-            mainApp.classList.remove('hidden');
-        } else {
-            localStorage.removeItem('active_key');
-            location.reload();
-        }
-    });
+if (localStorage.getItem('active_key')) {
+    document.getElementById('keyOverlay').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
 }
