@@ -2,13 +2,10 @@ import { db } from './database.js';
 import { ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
 
 let lastInjectedPeriod = null;
-let currentAPIPeriod = null;
-let currentAPINum = null;
 const userKey = localStorage.getItem('active_key');
 
-// --- PREMIUM COPY FORMAT ---
 window.copyHack = (period, pred, nums) => {
-    const text = `🚀 NOBITA HACK V15 💀\n━━━━━━━━━━━━━━━\nPERIOD: ${period}\nPREDICTION: ${pred}\nOPPOSITE: ${nums}\n━━━━━━━━━━━━━━━`;
+    const text = `🚀 NOBITA HACK V15 💀\n━━━━━━━━━━━━━━━\nPERIOD: ${period}\nPREDICTION: ${pred}\nNUMBERS: ${nums}\n━━━━━━━━━━━━━━━`;
     navigator.clipboard.writeText(text).then(() => {
         const toast = document.getElementById('copyToast');
         toast.classList.add('show');
@@ -24,7 +21,6 @@ async function getRealResults() {
     } catch (e) { return []; }
 }
 
-// --- AUTO INJECT LOGIC ---
 async function autoInject(num, period) {
     const nextIssue = (BigInt(period) + 1n).toString();
     if (lastInjectedPeriod === nextIssue) return;
@@ -35,13 +31,13 @@ async function autoInject(num, period) {
         const n = parseInt(num);
         let size, opNums;
 
-        // --- MATH LOGIC: Even -> BIG, Odd -> SMALL ---
+        // MATH LOGIC V15: Even -> BIG | Odd -> SMALL
         if (n % 2 === 0) {
             size = "BIG";
-            opNums = "1, 3"; 
+            opNums = "5, 6, 8"; // Custom set for Big
         } else {
             size = "SMALL";
-            opNums = "7, 9";
+            opNums = "1, 2, 3"; // Custom set for Small
         }
 
         const historyRef = push(ref(db, `user_history/${userKey}`));
@@ -54,11 +50,11 @@ async function autoInject(num, period) {
 
         document.getElementById('wRes').innerText = size;
         document.getElementById('wRes').className = `hacker-font text-8xl ${size === 'BIG' ? 'text-red-500' : 'text-emerald-500'}`;
-        document.getElementById('opNums').innerText = opNums;
+        document.getElementById('opNums').innerText = "JACKPOT: " + opNums;
         document.getElementById('aiLoader').classList.add('hidden');
         
         lastInjectedPeriod = nextIssue;
-    }, 1500);
+    }, 1000);
 }
 
 function loadHistory() {
@@ -66,39 +62,55 @@ function loadHistory() {
     onValue(ref(db, `user_history/${userKey}`), async (snapshot) => {
         const realData = await getRealResults();
         if (!snapshot.exists()) {
-            listDiv.innerHTML = "<p class='text-center py-10 text-gray-800 text-[10px]'>SEARCHING...</p>";
+            listDiv.innerHTML = "<p class='text-center py-10 text-gray-800 text-[10px]'>NO RECORDS</p>";
             return;
         }
 
         listDiv.innerHTML = "";
         Object.values(snapshot.val()).reverse().forEach(item => {
-            const match = realData.find(r => String(r.issueNumber).slice(-8) === String(item.period).slice(-8));
-            let status = "JK (PENDING)", sCol = "text-gray-600", border = "border-white/5", resInfo = "---";
+            const match = realData.find(r => String(r.issueNumber).slice(-6) === String(item.period).slice(-6));
+            let status = "JK (PENDING)", sCol = "text-gray-500", border = "border-white/5", resDetail = "---";
 
             if (match) {
                 const rNum = parseInt(match.number);
                 const rSize = rNum >= 5 ? "BIG" : "SMALL";
-                resInfo = `${rSize} ${rNum}`;
+                resDetail = `${rSize} (${rNum})`;
+                
+                // --- SMART STATUS LOGIC ---
+                const jackpotNums = item.opNums.split(",").map(x => parseInt(x.trim()));
+                
                 if (item.prediction === rSize) {
-                    status = `WIN (${rSize})`; sCol = "text-emerald-500"; border = "border-emerald-500/20";
+                    status = `WIN (${rSize})`; 
+                    sCol = "text-emerald-500"; 
+                    border = "border-emerald-500/20";
+                } else if (jackpotNums.includes(rNum)) {
+                    // Size mismatch but Jackpot Number hit!
+                    status = `JK (JACKPOT ${rNum})`; 
+                    sCol = "text-yellow-400"; 
+                    border = "border-yellow-400/20";
                 } else {
-                    status = `LOSS (${rSize} ${rNum})`; sCol = "text-red-500"; border = "border-red-500/20";
+                    status = `LOSS (${rSize} ${rNum})`; 
+                    sCol = "text-red-500"; 
+                    border = "border-red-500/20";
                 }
             }
 
             listDiv.innerHTML += `
-                <div class="history-card p-4 border ${border} mb-3 relative">
+                <div class="history-card p-4 border ${border} mb-3">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-[7px] text-gray-500 font-bold uppercase">PRD: ...${item.period.toString().slice(-4)}</p>
-                            <p class="text-[9px] font-bold text-white uppercase mt-1">PRED: ${item.prediction} | REAL: ${resInfo}</p>
+                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">PRD: ...${item.period.toString().slice(-4)}</p>
+                            <div class="flex gap-2 mt-1">
+                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white/40 uppercase">PRED: ${item.prediction}</span>
+                                <span class="text-[8px] bg-white/5 px-2 py-0.5 rounded text-white uppercase font-bold tracking-tighter">REAL: ${resDetail}</span>
+                            </div>
                         </div>
-                        <button onclick="copyHack('${item.period}', '${item.prediction}', '${item.opNums}')" class="bg-white/5 p-2 rounded-lg border border-white/10">
+                        <button onclick="copyHack('${item.period}', '${item.prediction}', '${item.opNums}')" class="bg-white/5 p-2 rounded-lg border border-white/10 active:scale-90 transition-all">
                             <svg class="w-3 h-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
                         </button>
                     </div>
-                    <div class="mt-2 flex justify-between items-end">
-                        <p class="hacker-font text-[9px] ${sCol} italic">${status}</p>
+                    <div class="mt-3 flex justify-between items-end">
+                        <p class="hacker-font text-[9px] ${sCol} italic font-black uppercase tracking-tighter">${status}</p>
                         <p class="text-[6px] text-white/10 font-bold">${item.time}</p>
                     </div>
                 </div>
@@ -110,14 +122,12 @@ function loadHistory() {
 async function syncAPI() {
     const data = await getRealResults();
     if(data.length > 0) {
-        currentAPINum = data[0].number;
-        currentAPIPeriod = data[0].issueNumber;
-        const nextLive = (BigInt(currentAPIPeriod) + 1n).toString();
+        const nextLive = (BigInt(data[0].issueNumber) + 1n).toString();
         document.getElementById("nextPeriod").innerText = "LIVE PERIOD: " + nextLive.slice(-4);
-        autoInject(currentAPINum, currentAPIPeriod);
+        autoInject(data[0].number, data[0].issueNumber);
     }
 }
 
-setInterval(syncAPI, 3000);
+setInterval(syncAPI, 5000);
 syncAPI();
 loadHistory();
