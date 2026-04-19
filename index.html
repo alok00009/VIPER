@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nobita Hack 💀 | V15 Auto</title>
+    <title>Nobita Hack 💀 | V15 Ultra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Orbitron:wght@900&display=swap');
@@ -13,7 +13,7 @@
         .nobita-title { font-family: 'Syncopate', sans-serif; text-shadow: 0 0 15px var(--neon-red); color: var(--neon-red); }
         .hacker-font { font-family: 'Orbitron', sans-serif; }
         .hidden { display: none !important; }
-        .history-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; transition: 0.3s; }
+        .history-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; }
         .copy-toast { position: fixed; bottom: 20px; background: #10b981; color: white; padding: 10px 20px; border-radius: 50px; font-size: 10px; font-weight: bold; transform: translateY(100px); transition: 0.5s; z-index: 200; }
         .copy-toast.show { transform: translateY(0); }
         ::-webkit-scrollbar { width: 4px; }
@@ -27,25 +27,25 @@
     <div id="keyOverlay" class="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center p-6 text-center">
         <h1 class="nobita-title text-2xl mb-8 italic">Nobita Auth 💀</h1>
         <input type="text" id="accessKey" placeholder="ENTER ACCESS KEY" class="w-full max-w-xs bg-gray-900 border border-red-500/30 p-5 rounded-2xl text-center outline-none mb-4 font-bold text-red-500 uppercase">
-        <button id="authBtn" class="bg-red-600 w-full max-w-xs py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">Unlock Hack</button>
+        <button id="authBtn" class="bg-red-600 w-full max-w-xs py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">Unlock Access</button>
     </div>
 
     <div id="mainApp" class="hidden w-full max-w-sm">
         <div class="shell p-8 text-center relative shadow-2xl mb-6">
             <h1 class="nobita-title text-3xl font-black mb-1 italic">Nobita Hack</h1>
-            <p class="text-[#fffb13] text-[9px] uppercase tracking-[0.4em] mb-10 italic">Strict Logic V15</p>
+            <p class="text-[#fffb13] text-[9px] uppercase tracking-[0.4em] mb-10 italic tracking-widest">Auto Inject V15</p>
 
-            <div class="bg-black/50 rounded-[40px] py-12 border border-white/5 mb-8 relative">
+            <div class="bg-black/50 rounded-[40px] py-12 border border-white/5 mb-8 relative overflow-hidden">
                 <div id="aiLoader" class="hidden absolute inset-0 bg-black/95 flex flex-col items-center justify-center rounded-[40px] z-20">
                     <div class="w-10 h-10 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                 </div>
                 <p id="nextPeriod" class="text-[10px] text-gray-500 font-bold uppercase mb-2 tracking-widest italic">Syncing API...</p>
                 <div id="wRes" class="hacker-font text-8xl">---</div>
-                <div id="opNums" class="text-[#fffb13] font-black text-xl mt-4">-</div>
+                <div id="opNums" class="text-[#fffb13] font-black text-xl mt-4 tracking-tighter">-</div>
             </div>
 
             <div class="w-full py-4 rounded-3xl border border-red-600/20 text-[10px] uppercase font-black tracking-widest text-red-600">
-                <span class="animate-pulse">● Auto Injecting Prediction</span>
+                <span class="animate-pulse">● Neural Monitoring Active</span>
             </div>
         </div>
 
